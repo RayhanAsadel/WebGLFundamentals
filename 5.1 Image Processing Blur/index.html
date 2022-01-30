@@ -1,6 +1,6 @@
 <canvas id="canvas"></canvas>
 <!-- vertex shader -->
-<link rel="stylesheet" src="index.css">
+<link rel="stylesheet" src="./index.css">
 <script  id="vertex-shader-2d" type="x-shader/x-vertex">
 attribute vec2 a_position;
 attribute vec2 a_texCoord;
@@ -26,20 +26,28 @@ void main() {
    v_texCoord = a_texCoord;
 }
 </script>
-<!-- fragment shader -->
-<script  id="fragment-shader-2d" type="x-shader/x-fragment">
-precision mediump float;
-
-// our texture
-uniform sampler2D u_image;
-
-// the texCoords passed in from the vertex shader.
-varying vec2 v_texCoord;
-
-void main() {
-   gl_FragColor = texture2D(u_image, v_texCoord);
-}
-</script><!--
+<script id="fragment-shader-2d" type="x-shader/x-fragment">
+   precision mediump float;
+    
+   // our texture
+   uniform sampler2D u_image;
+   uniform vec2 u_textureSize;
+    
+   // the texCoords passed in from the vertex shader.
+   varying vec2 v_texCoord;
+    
+   void main() {
+      // compute 1 pixel in texture coordinates.
+      vec2 onePixel = vec2(1.0, 1.0) / u_textureSize;
+    
+      // average the left, middle, and right pixels.
+      gl_FragColor = (
+          texture2D(u_image, v_texCoord) +
+          texture2D(u_image, v_texCoord + vec2(onePixel.x, 0.0)) +
+          texture2D(u_image, v_texCoord + vec2(-onePixel.x, 0.0))) / 3.0;
+   }
+   </script>
+<!--
 for most samples webgl-utils only provides shader compiling/linking and
 canvas resizing because why clutter the examples with code that's the same in every sample.
 See https://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html

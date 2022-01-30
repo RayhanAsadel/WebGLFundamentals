@@ -2,7 +2,7 @@
 
 function main() {
   var image = new Image();
-  image.src = "https://webglfundamentals.org/webgl/resources/leaves.jpg";  // MUST BE SAME DOMAIN!!!
+  image.src = "leaves.jpg";  // MUST BE SAME DOMAIN!!!
   image.onload = function() {
     render(image);
   };
